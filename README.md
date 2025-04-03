@@ -1,23 +1,27 @@
 # Midgard
 
-A collection of microservices and applications built with Go.
+A collection of microservices and applications built with Go and React Native.
 
 ## Project Structure
 
 ```
 midgard/
 ├── apps/
-│   └── wellness/           # Wellness API application
-│       ├── cmd/
-│       │   └── api/
-│       │       └── main.go # Application entry point
-│       ├── internal/
-│       │   ├── handlers/   # HTTP handlers
-│       │   ├── middleware/ # Custom middleware
-│       │   ├── routes/     # Route definitions
-│       │   ├── sentiment/  # Sentiment analysis model
-│       │   └── stream/     # Streaming processor
-│       ├── go.mod          # Go module file
+│   ├── wellness/           # Wellness API application
+│   │   ├── cmd/
+│   │   │   └── api/
+│   │   │       └── main.go # Application entry point
+│   │   ├── internal/
+│   │   │   ├── handlers/   # HTTP handlers
+│   │   │   ├── middleware/ # Custom middleware
+│   │   │   ├── routes/     # Route definitions
+│   │   │   ├── sentiment/  # Sentiment analysis model
+│   │   │   └── stream/     # Streaming processor
+│   │   ├── go.mod          # Go module file
+│   │   └── README.md       # Application-specific documentation
+│   └── senseclient/        # React Native mobile app
+│       ├── src/            # Source code
+│       ├── android/        # Android specific code
 │       └── README.md       # Application-specific documentation
 └── README.md               # This file
 ```
@@ -52,14 +56,27 @@ A Go-based REST API for sentiment analysis using the Gin framework. It provides:
 
 For detailed documentation on the Wellness API, see [apps/wellness/README.md](apps/wellness/README.md).
 
+### Sense Client
+
+A React Native mobile application for multi-modal data processing, including:
+
+- Text extraction from images
+- Voice processing
+- Computer vision capabilities
+
+For detailed documentation, see [apps/senseclient/senseclient.md](apps/senseclient/senseclient.md).
+
 ## Getting Started
 
 ### Prerequisites
 
-- Go 1.22 or later
+- Go 1.22 or later (for Go applications)
+- Node.js v14 or later (for React Native)
 - Git
 
-### Running the Wellness API
+### Running Applications
+
+#### Wellness API
 
 1. Navigate to the wellness app directory:
    ```bash
@@ -78,14 +95,33 @@ For detailed documentation on the Wellness API, see [apps/wellness/README.md](ap
 
 4. The server will start on `http://localhost:8080`
 
+#### Sense Client
+
+1. Navigate to the senseclient directory:
+   ```bash
+   cd apps/senseclient
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start the client:
+   ```bash
+   npm start
+   # In another terminal
+   npm run android
+   ```
+
 ## Development
 
 ### Adding New Applications
 
 1. Create a new directory under `apps/`
-2. Initialize a new Go module
+2. Initialize appropriate module (Go module or npm)
 3. Add your application code
-4. Create a README.md with documentation
+4. Create documentation
 
 ### Adding New Features
 
@@ -96,11 +132,6 @@ For detailed documentation on the Wellness API, see [apps/wellness/README.md](ap
 
 ## Testing
 
-To run tests for all applications:
-```bash
-go test ./...
-```
+- Go applications: `go test ./...`
+- React Native: `npm test`
 
-## License
-
-[Add your license here] 

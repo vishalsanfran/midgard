@@ -178,6 +178,7 @@ http://localhost:8080/api/v1/stream/results
 ```
 
 ### Complete Streaming Example
+
 To properly use the streaming functionality, follow these steps:
 
 1. First, submit some text for analysis:
