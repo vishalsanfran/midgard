@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -39,7 +40,7 @@ func RequestID() gin.HandlerFunc {
 		requestID := time.Now().UnixNano()
 		
 		// Set request ID in header
-		c.Writer.Header().Set("X-Request-ID", string(requestID))
+		c.Writer.Header().Set("X-Request-ID", fmt.Sprint(requestID))
 		
 		c.Next()
 	}

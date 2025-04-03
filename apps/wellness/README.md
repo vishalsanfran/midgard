@@ -26,6 +26,39 @@ wellness/
 └── README.md                 # This file
 ```
 
+## Running Tests
+
+The project includes comprehensive unit tests for various components. To run the tests, use the following commands:
+
+### Run All Tests
+```bash
+go test ./... -v
+```
+
+### Run Tests for Specific Packages
+```bash
+# Test sentiment analysis
+go test ./internal/sentiment -v
+
+# Test handlers
+go test ./internal/handlers -v
+
+# Test stream processor
+go test ./internal/stream -v
+```
+
+### Test Coverage
+To run tests with coverage reporting:
+```bash
+go test ./... -v -cover
+```
+
+For a detailed HTML coverage report:
+```bash
+go test ./... -coverprofile=coverage.out
+go tool cover -html=coverage.out
+```
+
 ## Features
 
 - RESTful API using Gin framework
