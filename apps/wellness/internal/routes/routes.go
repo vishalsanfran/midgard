@@ -23,6 +23,9 @@ func SetupRoutes(router *gin.Engine) {
 		// Sentiment analysis endpoint
 		v1.POST("/sentiment", handlers.AnalyzeSentiment)
 		
+		// Topic analysis endpoint
+		v1.POST("/topics", handlers.AnalyzeTopics)
+		
 		// Streaming endpoints
 		v1.POST("/stream/submit", handlers.SubmitToStream)
 		v1.GET("/stream/results", handlers.StreamResults)

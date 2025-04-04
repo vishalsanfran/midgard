@@ -13,15 +13,18 @@ wellness/
 │   ├── handlers/
 │   │   ├── health.go         # Health check handlers
 │   │   ├── sentiment.go      # Sentiment analysis handlers
-│   │   └── stream.go         # Streaming handlers
+│   │   ├── stream.go         # Streaming handlers
+│   │   └── topics.go         # Topic analysis handlers
 │   ├── middleware/
 │   │   └── logger.go         # Custom middleware
 │   ├── routes/
 │   │   └── routes.go         # Route definitions
 │   ├── sentiment/
 │   │   └── model.go          # Sentiment analysis model
-│   └── stream/
-│       └── processor.go       # Streaming processor
+│   ├── stream/
+│   │   └── processor.go       # Streaming processor
+│   └── topics/
+│       └── analyzer.go        # Topic analysis model
 ├── go.mod                    # Go module file
 └── README.md                 # This file
 ```
@@ -45,6 +48,9 @@ go test ./internal/handlers -v
 
 # Test stream processor
 go test ./internal/stream -v
+
+# Test topic analyzer
+go test ./internal/topics -v
 ```
 
 ### Test Coverage
@@ -69,6 +75,7 @@ go tool cover -html=coverage.out
 - Structured error handling
 - Simple sentiment analysis model
 - Real-time streaming with Go channels
+- Wellness topic analysis
 
 ## API Endpoints
 
@@ -111,6 +118,25 @@ go tool cover -html=coverage.out
         "sentiment": "positive",
         "score": 0.6,
         "confidence": 0.6
+      }
+    }
+    ```
+
+- `POST /api/v1/topics`
+  - Analyzes text to identify wellness-related topics
+  - Request:
+    ```json
+    {
+      "text": "I've been feeling stressed lately and need to exercise more."
+    }
+    ```
+  - Response:
+    ```json
+    {
+      "result": {
+        "text": "I've been feeling stressed lately and need to exercise more.",
+        "topics": ["mental_health", "physical_health"],
+        "confidence": 0.25
       }
     }
     ```
@@ -159,6 +185,13 @@ curl -X POST http://localhost:8080/api/v1/sentiment \
   -d '{"text": "I really enjoyed this product, it'\''s amazing!"}'
 ```
 
+### Topic Analysis
+```bash
+curl -X POST http://localhost:8080/api/v1/topics \
+  -H "Content-Type: application/json" \
+  -d '{"text": "I'\''ve been feeling stressed lately and need to exercise more."}'
+```
+
 ### Submit Text for Streaming Analysis
 ```bash
 curl -X POST http://localhost:8080/api/v1/stream/submit \
@@ -196,6 +229,18 @@ curl -N http://localhost:8080/api/v1/stream/results
 3. You can submit multiple items and they will be processed and streamed to all connected clients.
 
 > **Note:** The streaming connection must be established before or shortly after submitting items. If you connect to the stream after all items have been processed, you won't see any results.
+
+## Wellness Topic Analysis
+
+The topic analyzer identifies wellness-related topics in text, such as:
+
+- **Mental Health**: Anxiety, depression, stress, meditation, mindfulness, therapy
+- **Physical Health**: Exercise, workout, fitness, nutrition, diet, sleep
+- **Emotional Wellbeing**: Emotions, feelings, happiness, joy, sadness, anger
+- **Social Connection**: Friends, family, community, support, relationships
+- **Spiritual Wellness**: Spirituality, purpose, meaning, values, beliefs
+
+The analyzer uses natural language processing techniques to recognize topics based on predefined keywords and phrases associated with different wellness categories. It returns a confidence score indicating how confident it is in its topic identification.
 
 ## Streaming SSE API Details
 
@@ -248,7 +293,7 @@ curl -N http://localhost:8080/api/v1/stream/results
 You can also run the stream API in the background:
 
 ```bash
-# Start the stream API in the background
+# Start the stream in the background
 curl -N http://localhost:8080/api/v1/stream/results > stream_results.log &
 
 # Submit items
@@ -260,152 +305,31 @@ curl -X POST http://localhost:8080/api/v1/stream/submit \
 cat stream_results.log
 ```
 
-### SSE Event Format
-
-The server sends events in the following format:
-
-```
-event: connected
-data: Stream connection established
-
-event: message
-data: {"id":"item-1234567890","text":"I really enjoyed this product, it's amazing!","sentiment":"positive","score":0.6,"timestamp":"2024-03-21T10:00:00Z"}
-```
-
-- `event:` specifies the event type
-- `data:` contains the JSON payload
-
-### Browser Support
-
-SSE is supported in most modern browsers. You can open the stream URL directly in a browser:
-
-```
-http://localhost:8080/api/v1/stream/results
-```
-
-For a better user experience, you can create a simple HTML page with JavaScript to handle the SSE connection:
-
-```html
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Sentiment Analysis Stream</title>
-</head>
-<body>
-    <h1>Sentiment Analysis Results</h1>
-    <div id="results"></div>
-
-    <script>
-        const resultsDiv = document.getElementById('results');
-        const eventSource = new EventSource('http://localhost:8080/api/v1/stream/results');
-        
-        eventSource.onmessage = function(event) {
-            const result = JSON.parse(event.data);
-            const resultElement = document.createElement('div');
-            resultElement.innerHTML = `
-                <p><strong>ID:</strong> ${result.id}</p>
-                <p><strong>Text:</strong> ${result.text}</p>
-                <p><strong>Sentiment:</strong> ${result.sentiment}</p>
-                <p><strong>Score:</strong> ${result.score}</p>
-                <p><strong>Timestamp:</strong> ${result.timestamp}</p>
-                <hr>
-            `;
-            resultsDiv.appendChild(resultElement);
-        };
-        
-        eventSource.onerror = function(error) {
-            console.error('EventSource failed:', error);
-            eventSource.close();
-        };
-    </script>
-</body>
-</html>
-```
-
-## Middleware
-
-1. **Logger**
-   - Logs request method, path, client IP
-   - Tracks request duration
-   - Records response status
-   - Logs any errors
-
-2. **RequestID**
-   - Adds unique request ID to each request
-   - Sets `X-Request-ID` header
-   - Useful for request tracing
-
-## Sentiment Analysis
-
-The API includes a **simple dictionary-based sentiment analysis model** that:
-- Analyzes text to determine if it's positive, negative, or neutral
-- Provides a sentiment score from -1.0 (very negative) to 1.0 (very positive)
-- Includes a confidence score for the prediction
-- Uses predefined lists of positive and negative words
-
-> **Note:** This is a basic implementation for demonstration purposes only. It is not a machine learning or AI-based solution. For production use, consider integrating with a more sophisticated NLP service or ML model.
-
-## Streaming with Go Channels
-
-The API includes a real-time streaming feature that leverages Go's unique concurrency features:
-
-- **Concurrent Processing**: Uses multiple worker goroutines to process text items in parallel
-- **Channel-based Communication**: Uses Go channels for communication between components
-- **Non-blocking Operations**: Uses select statements with default cases to prevent blocking
-- **Graceful Shutdown**: Properly handles context cancellation and cleanup
-- **Server-Sent Events**: Streams results to clients using SSE
-
-This implementation demonstrates Go's powerful concurrency model and how it can be used to build efficient, scalable applications.
-
-## Setup
-
-1. Ensure you have Go 1.22 or later installed
-2. Clone the repository
-3. Navigate to the project directory:
-   ```bash
-   cd midgard/apps/wellness
-   ```
-4. Install dependencies:
-   ```bash
-   go mod tidy
-   ```
-
-## Running the API
-
-Start the server:
-```bash
-go run cmd/api/main.go
-```
-
-The server will start on `http://localhost:8080`
-
 ## Development
 
-### Adding New Endpoints
+### Adding New Features
 
-1. Create handler functions in `internal/handlers/`
-2. Add routes in `internal/routes/routes.go`
-3. Use middleware as needed from `internal/middleware/`
+When adding new features to the API, follow these guidelines:
 
-### Adding New Middleware
+1. Create a new package in the `internal` directory if needed
+2. Implement the feature logic in the package
+3. Create a handler in the `internal/handlers` directory
+4. Add the route to `internal/routes/routes.go`
+5. Add tests for the new feature
+6. Update this README with the new feature details
 
-1. Create middleware functions in `internal/middleware/`
-2. Register middleware in `cmd/api/main.go` or specific route groups
+### Code Style
 
-## Testing
+The project follows the standard Go code style. Use `gofmt` to format your code before committing:
 
-To run tests:
 ```bash
-go test ./...
+gofmt -w .
 ```
 
-## Contributing
+### Testing
 
-1. Create a new branch for your feature
-2. Make your changes
-3. Run tests
-4. Submit a pull request
+Always write tests for new features. The project uses the standard Go testing package and testify for assertions.
 
 ## License
 
-[Add your license here] 
+This project is licensed under the MIT License - see the LICENSE file for details. 

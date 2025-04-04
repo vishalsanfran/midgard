@@ -16,7 +16,8 @@ midgard/
 │   │   │   ├── middleware/ # Custom middleware
 │   │   │   ├── routes/     # Route definitions
 │   │   │   ├── sentiment/  # Sentiment analysis model
-│   │   │   └── stream/     # Streaming processor
+│   │   │   ├── stream/     # Streaming processor
+│   │   │   └── topics/     # Topic analysis model
 │   │   ├── go.mod          # Go module file
 │   │   └── README.md       # Application-specific documentation
 │   └── senseclient/        # React Native mobile app
@@ -30,9 +31,10 @@ midgard/
 
 ### Wellness API
 
-A Go-based REST API for sentiment analysis using the Gin framework. It provides:
+A Go-based REST API for wellness analysis using the Gin framework. It provides:
 
 - RESTful API endpoints for sentiment analysis
+- Wellness topic identification (mental health, physical health, etc.)
 - Real-time streaming with Server-Sent Events (SSE)
 - Request logging and tracking
 - Health check endpoints
@@ -41,6 +43,7 @@ A Go-based REST API for sentiment analysis using the Gin framework. It provides:
 #### Features
 
 - Simple dictionary-based sentiment analysis
+- Natural language processing for wellness topic identification
 - Concurrent processing with Go channels
 - Non-blocking operations
 - Graceful shutdown
@@ -51,6 +54,7 @@ A Go-based REST API for sentiment analysis using the Gin framework. It provides:
 - `GET /health` - Health check endpoint
 - `GET /api/v1/ping` - Basic ping endpoint
 - `POST /api/v1/sentiment` - Synchronous sentiment analysis
+- `POST /api/v1/topics` - Identify wellness-related topics in text
 - `POST /api/v1/stream/submit` - Submit text for asynchronous analysis
 - `GET /api/v1/stream/results` - Stream analysis results using SSE
 
@@ -107,12 +111,29 @@ For detailed documentation, see [apps/senseclient/senseclient.md](apps/senseclie
    npm install
    ```
 
-3. Start the client:
+3. Start the development server:
    ```bash
    npm start
-   # In another terminal
+   ```
+
+4. Run on iOS or Android:
+   ```bash
+   npm run ios
+   # or
    npm run android
    ```
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Development
 
