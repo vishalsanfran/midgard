@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# This script copies the trained model file to the counselassist application
+# and versions it with the current git commit hash for tracking and deployment.
+# Usage: ./move_model.sh
+
 # Get git hash
 GIT_HASH=$(git rev-parse --short HEAD)
 

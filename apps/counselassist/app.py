@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 class ModelService:
     def __init__(self):
         self.models: Dict[str, any] = {}
-        self.current_version = "v1"
+        self.current_version = None
         self.metrics = {
             "predictions": 0,
             "errors": 0,
@@ -23,16 +23,38 @@ class ModelService:
             "last_updated": None
         }
         self.load_models()
+        if not self.models:
+            logger.error("No models found in models directory")
+            raise RuntimeError("No models available")
 
     def load_models(self):
-        models_dir = Path("models")
-        for model_path in models_dir.glob("*.joblib"):
-            version = model_path.stem.split("_")[-1]
-            self.models[version] = joblib.load(model_path)
-            logger.info(f"Loaded model version: {version}")
+        try:
+            models_dir = Path("models")
+            if not models_dir.exists():
+                logger.error(f"Models directory not found: {models_dir.absolute()}")
+                return
+
+            for model_path in models_dir.glob("counselor_response_classifier_*.joblib"):
+                version = model_path.stem.split("_")[-1]  # Get the git hash
+                logger.info(f"Loading model from: {model_path}")
+                self.models[version] = joblib.load(model_path)
+                if not self.current_version:
+                    self.current_version = version
+                logger.info(f"Loaded model version: {version}")
+        except Exception as e:
+            logger.error(f"Error loading models: {str(e)}", exc_info=True)
+            raise
 
     def get_model(self, version: Optional[str] = None):
-        return self.models[version or self.current_version]
+        try:
+            if version and version not in self.models:
+                raise KeyError(f"Model version {version} not found. Available versions: {list(self.models.keys())}")
+            if not self.current_version:
+                raise RuntimeError("No models loaded")
+            return self.models[version or self.current_version]
+        except Exception as e:
+            logger.error(f"Error getting model: {str(e)}")
+            raise
 
     def update_metrics(self, confidence: float):
         self.metrics["predictions"] += 1
@@ -67,20 +89,31 @@ async def predict(
     background_tasks: BackgroundTasks
 ):
     try:
+        logger.info(f"Processing prediction request for version: {request.model_version}")
         model = model_service.get_model(request.model_version)
-        probability = model.predict_proba([request.text])[0][1]
-        confidence = np.max(model.predict_proba([request.text])[0])
+        
+        # Get probabilities for all classes
+        probabilities = model.predict_proba([request.text])[0]
+        
+        # Get the predicted class probability (highest probability)
+        prediction = probabilities[1]  # Probability for positive class
+        
+        # Get confidence (margin between top two probabilities)
+        sorted_probs = sorted(probabilities, reverse=True)
+        confidence = sorted_probs[0] - sorted_probs[1]  # Difference between top two probabilities
         
         background_tasks.add_task(model_service.update_metrics, confidence)
         
-        return PredictionResponse(
-            prediction=float(probability),
+        response = PredictionResponse(
+            prediction=float(prediction),
             confidence=float(confidence),
             model_version=request.model_version or model_service.current_version,
             timestamp=datetime.now().isoformat()
         )
+        logger.info(f"Prediction successful: {response}")
+        return response
     except Exception as e:
-        logger.error(f"Prediction error: {str(e)}")
+        logger.error(f"Prediction error: {str(e)}", exc_info=True)
         model_service.metrics["errors"] += 1
         raise HTTPException(status_code=500, detail=str(e))
 
