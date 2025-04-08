@@ -16,6 +16,23 @@ go.work
 *.swo
 *~
 
+#Python specific files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+*.egg
+*.pth
+*.egg
+*.dist-info/
+*.egg
+*.dist-info
+*.egg-info
+*.dist-info
+*.egg-info
+*.venv
+
 # OS generated files
 .DS_Store
 .DS_Store?
