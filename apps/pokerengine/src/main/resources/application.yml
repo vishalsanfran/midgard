@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: poker-engine
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,prometheus,info
+  endpoint:
+    health:
+      show-details: always
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+
+rate-limit:
+  capacity: 100
+  time-window: 60  # in seconds
+  enabled: true

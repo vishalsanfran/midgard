@@ -35,3 +35,9 @@ This project uses:
 - JUnit 5 for testing
 - JaCoCo for test coverage
 - Checkstyle for code formatting
+
+## API Documentation
+
+Once the application is running, you can access the API documentation at:
+- Swagger UI: http://localhost:8080/swagger-ui.html
+- OpenAPI Spec: http://localhost:8080/v3/api-docs
