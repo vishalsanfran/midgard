@@ -1,31 +1,26 @@
 package com.midgard.pokerengine.interceptor;
 
+import io.github.bucket4j.Bucket;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-/**
- * Interceptor to implement rate limiting for API requests.
- * Limits the number of requests that can be made within a time window.
- */
+@Component
 public class RateLimitInterceptor implements HandlerInterceptor {
-  private final int maxRequests;
+    private final Bucket bucket;
 
-  public RateLimitInterceptor(int maxRequests) {
-    this.maxRequests = maxRequests;
-  }
-
-  @Override
-  public boolean preHandle(
-      HttpServletRequest request,
-      HttpServletResponse response,
-      Object handler) throws Exception {
-    if (isRateLimitExceeded(request)) {
-      response.sendError(HttpServletResponse.SC_TOO_MANY_REQUESTS);
-      return false;
+    public RateLimitInterceptor(Bucket bucket) {
+        this.bucket = bucket;
     }
 
-    updateRateLimit(request);
-    return true;
-  }
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+        if (!bucket.tryConsume(1)) {
+            response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
+            return false;
+        }
+        return true;
+    }
 }

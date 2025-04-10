@@ -1,35 +1,28 @@
 package com.midgard.pokerengine.config;
 
+import io.github.bucket4j.Bandwidth;
+import io.github.bucket4j.Bucket;
+import io.github.bucket4j.Refill;
 import java.time.Duration;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import lombok.Data;
 
-/**
- * Configuration class for rate limiting settings.
- * Provides configuration for request rate limiting parameters.
- */
+@Data
 @Configuration
+@ConfigurationProperties(prefix = "rate-limit")
+@EnableConfigurationProperties
 public class RateLimitConfig {
-  @Value("${rate.limit.requests:100}")
-  private int maxRequests;
+    private int capacity;
+    private int timeWindow;
+    private boolean enabled;
 
-  @Value("${rate.limit.duration:60}")
-  private int durationSeconds;
-
-  @Value("${rate.limit.enabled:true}")
-  private boolean enabled;
-
-  /**
-   * Creates a rate limit interceptor with configured parameters.
-   *
-   * @return configured RateLimitInterceptor instance
-   */
-  @Bean
-  public RateLimitInterceptor rateLimitInterceptor() {
-    if (!enabled) {
-      return null;
+    @Bean
+    public Bucket bucket() {
+        return Bucket.builder()
+                    .addLimit(Bandwidth.classic(capacity, Refill.intervally(capacity, Duration.ofSeconds(timeWindow))))
+                    .build();
     }
-    return new RateLimitInterceptor(maxRequests);
-  }
 }

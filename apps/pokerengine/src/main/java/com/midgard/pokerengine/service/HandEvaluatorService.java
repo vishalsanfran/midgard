@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.HashSet;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
@@ -20,28 +21,37 @@ public class HandEvaluatorService {
    * @return true if the cards form a straight, false otherwise
    */
   public boolean isStraight(List<Card> cards) {
-    if (cards == null || cards.size() < 5) {
-      return false;
-    }
-
-    List<Integer> values = new ArrayList<>();
+  
+    Set<Integer> values = new HashSet<>();
+    boolean hasAce = false;
     for (Card card : cards) {
-      values.add(card.getValue());
+        int value = card.getValue();
+        if (value == 14) hasAce = true;
+        values.add(value);
     }
-    Collections.sort(values);
-
-    for (int i = 0; i <= values.size() - 5; i++) {
-      boolean isStraight = true;
-      for (int j = i; j < i + 4; j++) {
-        if (values.get(j + 1) - values.get(j) != 1) {
-          isStraight = false;
-          break;
-        }
-      }
-      if (isStraight) {
+    if (hasConsecutive(values)) {
         return true;
-      }
+    }
+    if (hasAce) {
+        values.remove(14);
+        values.add(1);
+        return hasConsecutive(values);
     }
     return false;
+  }
+
+  private boolean hasConsecutive(Set<Integer> values) {
+    int cur = Integer.MAX_VALUE;
+    for (int value : values) {
+        cur = Math.min(cur, value);
+    }
+    System.out.println("vkk total cards " + Integer.toString(values.size()));
+    for(int i = 0; i < values.size() - 1; i++) {
+      if(!values.contains(cur + 1)) {
+        return false;
+      }
+      cur += 1;
+    }
+    return true;
   }
 }

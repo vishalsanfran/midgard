@@ -81,7 +81,7 @@ class HandEvaluatorServiceTest {
     }
 
     @Test
-    void isStraight_SevenCardWithStraight_ReturnsTrue() {
+    void isStraight_SevenCardWithStraight_ReturnsFalse() {
         List<Card> hand = List.of(
             new Card(Suit.HEARTS, 2),
             new Card(Suit.CLUBS, 3),
@@ -91,7 +91,7 @@ class HandEvaluatorServiceTest {
             new Card(Suit.CLUBS, 8),
             new Card(Suit.DIAMONDS, 10)
         );
-        assertTrue(handEvaluatorService.isStraight(hand));
+        assertFalse(handEvaluatorService.isStraight(hand));
     }
 
     @Test

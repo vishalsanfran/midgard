@@ -1,20 +1,20 @@
 package com.midgard.pokerengine.config;
 
+import com.midgard.pokerengine.interceptor.RateLimitInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-/**
- * Configuration class for web-specific settings.
- */
 @Configuration
-public class WebConfig {
-  private final RateLimitInterceptor rateLimitInterceptor;
+public class WebConfig implements WebMvcConfigurer {
+    private final RateLimitInterceptor rateLimitInterceptor;
 
-  public WebConfig(RateLimitInterceptor rateLimitInterceptor) {
-    this.rateLimitInterceptor = rateLimitInterceptor;
-  }
+    public WebConfig(RateLimitInterceptor rateLimitInterceptor) {
+        this.rateLimitInterceptor = rateLimitInterceptor;
+    }
 
-  public void addInterceptors(InterceptorRegistry registry) {
-    registry.addInterceptor(rateLimitInterceptor);
-  }
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(rateLimitInterceptor);
+    }
 }
