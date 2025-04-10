@@ -60,7 +60,7 @@ Once the application is running, you can access the API documentation at:
 
 ### API Endpoints
 
-Card model: {"suit": "HEARTS", "value": 2},
+Card model: {"suit": "HEARTS", "rank": "THREE"},
 
 #### Check for Straight Hand
 Evaluates if a given set of poker cards forms a straight.
