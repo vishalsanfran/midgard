@@ -4,6 +4,7 @@ import com.midgard.pokerengine.config.PokerConfig;
 import com.midgard.pokerengine.exception.BusinessException;
 import com.midgard.pokerengine.model.HandRequest;
 import com.midgard.pokerengine.service.HandEvaluatorService;
+import com.midgard.pokerengine.model.StandardResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,11 +15,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.time.LocalDateTime;
 
 /**
  * Controller for poker hand evaluation endpoints.
@@ -63,8 +64,8 @@ public class HandEvaluatorController {
             )
         )
     })
-    @PostMapping("/isstraight") 
-    public ResponseEntity<Boolean> isStraight(@RequestBody HandRequest handRequest) {
+    @PostMapping("/isstraight")
+    public ResponseEntity<StandardResponse<Boolean>> isStraight(@RequestBody HandRequest handRequest) {
         logger.info("Received request: {}", handRequest);
 
         // Validate that the cards list is not null
@@ -82,7 +83,16 @@ public class HandEvaluatorController {
 
         // Evaluate if the hand is a straight
         boolean result = handEvaluatorService.isStraight(handRequest.getCards());
-        return ResponseEntity.ok(result);
+
+        // Return a standardized response
+        StandardResponse<Boolean> response = new StandardResponse<>(
+            LocalDateTime.now(),
+            HttpStatus.OK.value(),
+            "Successfully evaluated the hand",
+            result
+        );
+
+        return ResponseEntity.ok(response);
     }
 
     // Handle invalid input exceptions

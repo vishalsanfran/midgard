@@ -60,12 +60,15 @@ class HandEvaluatorControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(content().string("true"));
+                .andExpect(jsonPath("$.timestamp").exists()) // Verify timestamp exists
+                .andExpect(jsonPath("$.status").value(200)) // Verify status is 200
+                .andExpect(jsonPath("$.message").value("Successfully evaluated the hand")) // Verify success message
+                .andExpect(jsonPath("$.data").value(true)); // Verify data is true
     }
 
     @Test
     void isStraight_InvalidHandSize_ReturnsBadRequest() throws Exception {
-        // Create an invalid HandRequest with fewer than 5 cards
+        // Arrange
         HandRequest request = new HandRequest(List.of(
             new Card(Suit.HEARTS, Rank.TWO),
             new Card(Suit.CLUBS, Rank.THREE),
@@ -73,11 +76,18 @@ class HandEvaluatorControllerTest {
             new Card(Suit.SPADES, Rank.FIVE)
         ));
 
-        // Perform the POST request and verify the response
+        // Mock the valid hand sizes in PokerConfig
+        when(pokerConfig.getValidHandSizes()).thenReturn(List.of(5, 7));
+
+        // Act & Assert
         mockMvc.perform(post("/api/v1/hand/isstraight")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.timestamp").exists())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.message").value("Invalid hand size: 4. Valid sizes are: [5, 7]"))
+                .andExpect(jsonPath("$.data").isEmpty());
     }
 
     @Test
