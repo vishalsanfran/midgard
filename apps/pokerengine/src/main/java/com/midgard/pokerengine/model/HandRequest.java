@@ -1,22 +1,25 @@
 package com.midgard.pokerengine.model;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
-import lombok.Data;
-
 import java.util.List;
 
-@Data
-public class HandRequest {
-    @NotEmpty(message = "Cards list cannot be empty")
-    @Size(min = 5, max = 7, message = "Hand must contain 5 or 7 cards")
-    @Valid
-    private List<Card> cards;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-    @AssertTrue(message = "Hand must contain exactly 5 or 7 cards")
-    public boolean isValidHandSize() {
-        return cards != null && (cards.size() == 5 || cards.size() == 7);
-    }
+/**
+ * Request object for poker hand operations.
+ * Contains a list of cards that make up a poker hand.
+ */
+@Data
+@NoArgsConstructor
+public class HandRequest {
+  private List<Card> cards;
+
+  /**
+   * Validates if the hand size is either 5 or 7 cards.
+   *
+   * @return true if hand size is valid, false otherwise
+   */
+  public boolean isValidHandSize() {
+    return cards != null && (cards.size() == 5 || cards.size() == 7);
+  }
 }

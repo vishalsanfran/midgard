@@ -1,18 +1,18 @@
 package com.midgard.pokerengine.config;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.method.HandlerTypePredicate;
-import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/**
+ * Configuration class for Web API related settings.
+ * Implements WebMvcConfigurer for custom web configuration.
+ */
 @Configuration
 public class WebApiConfig implements WebMvcConfigurer {
-
-    @Override
-    public void configurePathMatch(PathMatchConfigurer configurer) {
-        configurer.addPathPrefix("/api/v1",
-            HandlerTypePredicate.forAnnotation(RestController.class)
-                .and(handler -> !handler.getPackageName().contains("springdoc")));
-    }
+  @Override
+  public void addCorsMappings(CorsRegistry registry) {
+    registry.addMapping("/api/**")
+        .allowedOrigins("*")
+        .allowedMethods("GET", "POST", "PUT", "DELETE");
+  }
 }

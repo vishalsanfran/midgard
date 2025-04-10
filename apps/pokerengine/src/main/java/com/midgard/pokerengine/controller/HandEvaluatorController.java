@@ -2,25 +2,25 @@ package com.midgard.pokerengine.controller;
 
 import com.midgard.pokerengine.model.HandRequest;
 import com.midgard.pokerengine.service.HandEvaluatorService;
-import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Controller for poker hand evaluation endpoints.
+ */
 @RestController
-@RequestMapping("/hand")
+@RequestMapping("/api/v1/poker")
 public class HandEvaluatorController {
+  private final HandEvaluatorService handEvaluatorService;
 
-    private final HandEvaluatorService handEvaluatorService;
+  public HandEvaluatorController(HandEvaluatorService handEvaluatorService) {
+    this.handEvaluatorService = handEvaluatorService;
+  }
 
-    public HandEvaluatorController(HandEvaluatorService handEvaluatorService) {
-        this.handEvaluatorService = handEvaluatorService;
-    }
-
-    @PostMapping("/isstraight")
-    public ResponseEntity<Boolean> isStraight(@Valid @RequestBody HandRequest request) {
-        return ResponseEntity.ok(handEvaluatorService.isStraight(request.getCards()));
-    }
+  @PostMapping("/evaluate")
+  public boolean evaluateHand(@RequestBody HandRequest request) {
+    return handEvaluatorService.isStraight(request.getCards());
+  }
 }

@@ -27,6 +27,10 @@ The application will start on http://localhost:8080
 ./mvnw test
  ```
 
+## Generate checkstyle report
+`./mvnw checkstyle:checkstyle`
+View report: `open target/site/checkstyle.html`
+
 Run tests and generate coverage report: `./mvnw verify`
 
 Open coverage report in browser: `open target/site/jacoco/index.html`
