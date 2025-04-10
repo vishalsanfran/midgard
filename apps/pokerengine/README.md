@@ -67,19 +67,31 @@ Evaluates if a given set of poker cards forms a straight.
 
 - Endpoint: `POST /api/v1/hand/isstraight`
 - Content-Type: `application/json`
-- Request Body: Array of cards, each with suit and value
+- Request Body: Array of cards, each with suit and rank
 - Response: Boolean indicating if the hand forms a straight
 
 Example Request:
+```bash
+curl -X POST 'http://localhost:8080/api/v1/hand/isstraight' \
+-H 'Content-Type: application/json' \
+-d '{
+  "cards": [
+    {"suit": "HEARTS", "rank": "SIX"}, 
+    {"suit": "HEARTS", "rank": "TWO"},
+    {"suit": "HEARTS", "rank": "THREE"}, 
+    {"suit": "DIAMONDS", "rank": "FOUR"},
+    {"suit": "SPADES", "rank": "FIVE"}                                      
+  ]
+}'
+```
+
+Example Response:
 ```json
 {
-  "cards": [
-    {"suit": "HEARTS", "value": 2},
-    {"suit": "CLUBS", "value": 3},
-    {"suit": "DIAMONDS", "value": 4},
-    {"suit": "SPADES", "value": 5},
-    {"suit": "HEARTS", "value": 6}
-  ]
+  "timestamp": "2025-04-10T11:38:27.624764",
+  "status": 200,
+  "message": "Successfully evaluated the hand",
+  "data": true
 }
 ```
 
