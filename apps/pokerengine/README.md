@@ -40,6 +40,12 @@ This project uses:
 - JUnit 5 for testing
 - JaCoCo for test coverage
 - Checkstyle for code formatting
+- Prometheus metrics
+- Actuator for health checks
+- Error handling framework
+- API versioning
+- Rate limiter
+- OpenAPI docs
 
 ## API Documentation
 
