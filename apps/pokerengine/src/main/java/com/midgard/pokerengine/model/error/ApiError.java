@@ -2,7 +2,6 @@ package com.midgard.pokerengine.model.error;
 
 import lombok.Builder;
 import lombok.Data;
-
 import java.time.LocalDateTime;
 
 @Data
