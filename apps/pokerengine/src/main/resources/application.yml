@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: poker-engine
+
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: health,metrics,prometheus,info
+  endpoint:
+    health:
+      show-details: always
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+    urls:
+      - url: /api-docs
+        name: API Documentation
+  use-management-port: false
+  default-produces-media-type: application/json
+
+rate-limit:
+  capacity: 100
+  time-window: 60  # in seconds
+  enabled: true
