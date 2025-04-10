@@ -3,8 +3,12 @@ name: Java CI with Maven
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - 'apps/pokerengine/**'
   pull_request:
     branches: [ "main" ]
+    paths:
+      - 'apps/pokerengine/**'
 
 jobs:
   build:

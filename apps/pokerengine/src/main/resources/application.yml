@@ -33,3 +33,60 @@ rate-limit:
   capacity: 100
   time-window: 60  # in seconds
   enabled: true
+logging:
+  level:
+    com.midgard.pokerengine: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
+poker:
+  valid-hand-sizes: [5, 7]
+  # Can be done, if we want to customize the deck
+  # suits:
+  #   - name: HEARTS
+  #     symbol: H
+  #   - name: DIAMONDS
+  #     symbol: D
+  #   - name: CLUBS
+  #     symbol: C
+  #   - name: SPADES
+  #     symbol: S
+  # ranks:
+  #   - name: TWO
+  #     value: 2
+  #     alternateValues: []
+  #   - name: THREE
+  #     value: 3
+  #     alternateValues: []
+  #   - name: FOUR
+  #     value: 4
+  #     alternateValues: []
+  #   - name: FIVE
+  #     value: 5
+  #     alternateValues: []
+  #   - name: SIX
+  #     value: 6
+  #     alternateValues: []
+  #   - name: SEVEN
+  #     value: 7
+  #     alternateValues: []
+  #   - name: EIGHT
+  #     value: 8
+  #     alternateValues: []
+  #   - name: NINE
+  #     value: 9
+  #     alternateValues: []
+  #   - name: TEN
+  #     value: 10
+  #     alternateValues: []
+  #   - name: JACK
+  #     value: 11
+  #     alternateValues: []
+  #   - name: QUEEN
+  #     value: 12
+  #     alternateValues: []
+  #   - name: KING
+  #     value: 13
+  #     alternateValues: []
+  #   - name: ACE
+  #     value: 14
+  #     alternateValues: [1]

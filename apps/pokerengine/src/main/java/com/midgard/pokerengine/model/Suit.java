@@ -1,9 +1,11 @@
 package com.midgard.pokerengine.model;
 
+import lombok.Getter;
+
 /**
- * Represents the suit of a playing card.
- * Standard poker suits: Hearts, Diamonds, Clubs, and Spades.
+ * Card suit enum.
  */
+@Getter
 public enum Suit {
   HEARTS("H"),
   DIAMONDS("D"),
@@ -16,22 +18,4 @@ public enum Suit {
     this.symbol = symbol;
   }
 
-  public String getSymbol() {
-    return symbol;
-  }
-
-  /**
-   * Finds a Suit by its symbol representation.
-   *
-   * @param symbol the symbol to look up
-   * @return the matching Suit or null if not found
-   */
-  public static Suit fromSymbol(String symbol) {
-    for (Suit suit : values()) {
-      if (suit.symbol.equals(symbol)) {
-        return suit;
-      }
-    }
-    return null;
-  }
 }

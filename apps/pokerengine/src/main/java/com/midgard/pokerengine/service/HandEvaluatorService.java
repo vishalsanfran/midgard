@@ -1,12 +1,9 @@
 package com.midgard.pokerengine.service;
 
 import com.midgard.pokerengine.model.Card;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 /**
@@ -25,7 +22,7 @@ public class HandEvaluatorService {
     Set<Integer> values = new HashSet<>();
     boolean hasAce = false;
     for (Card card : cards) {
-        int value = card.getValue();
+        int value = card.getRank().getValue();
         if (value == 14) hasAce = true;
         values.add(value);
     }
@@ -45,7 +42,6 @@ public class HandEvaluatorService {
     for (int value : values) {
         cur = Math.min(cur, value);
     }
-    System.out.println("vkk total cards " + Integer.toString(values.size()));
     for(int i = 0; i < values.size() - 1; i++) {
       if(!values.contains(cur + 1)) {
         return false;

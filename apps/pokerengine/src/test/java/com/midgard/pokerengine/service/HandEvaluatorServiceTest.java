@@ -1,6 +1,7 @@
 package com.midgard.pokerengine.service;
 
 import com.midgard.pokerengine.model.Card;
+import com.midgard.pokerengine.model.Rank;
 import com.midgard.pokerengine.model.Suit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,11 +22,11 @@ class HandEvaluatorServiceTest {
     @Test
     void isStraight_RegularStraight_ReturnsTrue() {
         List<Card> hand = List.of(
-            new Card(Suit.HEARTS, 2),
-            new Card(Suit.CLUBS, 3),
-            new Card(Suit.DIAMONDS, 4),
-            new Card(Suit.SPADES, 5),
-            new Card(Suit.HEARTS, 6)
+            new Card(Suit.HEARTS, Rank.TWO),
+            new Card(Suit.CLUBS, Rank.THREE),
+            new Card(Suit.DIAMONDS, Rank.FOUR),
+            new Card(Suit.SPADES, Rank.FIVE),
+            new Card(Suit.HEARTS, Rank.SIX)
         );
         assertTrue(handEvaluatorService.isStraight(hand));
     }
@@ -33,11 +34,11 @@ class HandEvaluatorServiceTest {
     @Test
     void isStraight_AceLowStraight_ReturnsTrue() {
         List<Card> hand = List.of(
-            new Card(Suit.HEARTS, 14), // Ace
-            new Card(Suit.CLUBS, 2),
-            new Card(Suit.DIAMONDS, 3),
-            new Card(Suit.SPADES, 4),
-            new Card(Suit.HEARTS, 5)
+            new Card(Suit.HEARTS, Rank.ACE), // Ace as low
+            new Card(Suit.CLUBS, Rank.TWO),
+            new Card(Suit.DIAMONDS, Rank.THREE),
+            new Card(Suit.SPADES, Rank.FOUR),
+            new Card(Suit.HEARTS, Rank.FIVE)
         );
         assertTrue(handEvaluatorService.isStraight(hand));
     }
@@ -45,11 +46,11 @@ class HandEvaluatorServiceTest {
     @Test
     void isStraight_AceHighStraight_ReturnsTrue() {
         List<Card> hand = List.of(
-            new Card(Suit.HEARTS, 10),
-            new Card(Suit.CLUBS, 11),
-            new Card(Suit.DIAMONDS, 12),
-            new Card(Suit.SPADES, 13),
-            new Card(Suit.HEARTS, 14) // Ace
+            new Card(Suit.HEARTS, Rank.TEN),
+            new Card(Suit.CLUBS, Rank.JACK),
+            new Card(Suit.DIAMONDS, Rank.QUEEN),
+            new Card(Suit.SPADES, Rank.KING),
+            new Card(Suit.HEARTS, Rank.ACE) // Ace as high
         );
         assertTrue(handEvaluatorService.isStraight(hand));
     }
@@ -57,11 +58,11 @@ class HandEvaluatorServiceTest {
     @Test
     void isStraight_NotAStraight_ReturnsFalse() {
         List<Card> hand = List.of(
-            new Card(Suit.HEARTS, 2),
-            new Card(Suit.CLUBS, 3),
-            new Card(Suit.DIAMONDS, 4),
-            new Card(Suit.SPADES, 6),
-            new Card(Suit.HEARTS, 7)
+            new Card(Suit.HEARTS, Rank.TWO),
+            new Card(Suit.CLUBS, Rank.THREE),
+            new Card(Suit.DIAMONDS, Rank.FOUR),
+            new Card(Suit.SPADES, Rank.SIX),
+            new Card(Suit.HEARTS, Rank.SEVEN)
         );
         assertFalse(handEvaluatorService.isStraight(hand));
     }
@@ -69,13 +70,13 @@ class HandEvaluatorServiceTest {
     @Test
     void isStraight_SevenCardStraight_ReturnsTrue() {
         List<Card> hand = List.of(
-            new Card(Suit.HEARTS, 2),
-            new Card(Suit.CLUBS, 3),
-            new Card(Suit.DIAMONDS, 4),
-            new Card(Suit.SPADES, 5),
-            new Card(Suit.HEARTS, 6),
-            new Card(Suit.CLUBS, 7),
-            new Card(Suit.DIAMONDS, 8)
+            new Card(Suit.HEARTS, Rank.TWO),
+            new Card(Suit.CLUBS, Rank.THREE),
+            new Card(Suit.DIAMONDS, Rank.FOUR),
+            new Card(Suit.SPADES, Rank.FIVE),
+            new Card(Suit.HEARTS, Rank.SIX),
+            new Card(Suit.CLUBS, Rank.SEVEN),
+            new Card(Suit.DIAMONDS, Rank.EIGHT)
         );
         assertTrue(handEvaluatorService.isStraight(hand));
     }
@@ -83,13 +84,13 @@ class HandEvaluatorServiceTest {
     @Test
     void isStraight_SevenCardWithStraight_ReturnsFalse() {
         List<Card> hand = List.of(
-            new Card(Suit.HEARTS, 2),
-            new Card(Suit.CLUBS, 3),
-            new Card(Suit.DIAMONDS, 4),
-            new Card(Suit.SPADES, 5),
-            new Card(Suit.HEARTS, 6),
-            new Card(Suit.CLUBS, 8),
-            new Card(Suit.DIAMONDS, 10)
+            new Card(Suit.HEARTS, Rank.TWO),
+            new Card(Suit.CLUBS, Rank.THREE),
+            new Card(Suit.DIAMONDS, Rank.FOUR),
+            new Card(Suit.SPADES, Rank.FIVE),
+            new Card(Suit.HEARTS, Rank.SIX),
+            new Card(Suit.CLUBS, Rank.EIGHT),
+            new Card(Suit.DIAMONDS, Rank.TEN)
         );
         assertFalse(handEvaluatorService.isStraight(hand));
     }
@@ -97,13 +98,13 @@ class HandEvaluatorServiceTest {
     @Test
     void isStraight_SevenCardNoStraight_ReturnsFalse() {
         List<Card> hand = List.of(
-            new Card(Suit.HEARTS, 2),
-            new Card(Suit.CLUBS, 4),
-            new Card(Suit.DIAMONDS, 6),
-            new Card(Suit.SPADES, 8),
-            new Card(Suit.HEARTS, 10),
-            new Card(Suit.CLUBS, 12),
-            new Card(Suit.DIAMONDS, 14)
+            new Card(Suit.HEARTS, Rank.TWO),
+            new Card(Suit.CLUBS, Rank.FOUR),
+            new Card(Suit.DIAMONDS, Rank.SIX),
+            new Card(Suit.SPADES, Rank.EIGHT),
+            new Card(Suit.HEARTS, Rank.TEN),
+            new Card(Suit.CLUBS, Rank.QUEEN),
+            new Card(Suit.DIAMONDS, Rank.ACE)
         );
         assertFalse(handEvaluatorService.isStraight(hand));
     }
