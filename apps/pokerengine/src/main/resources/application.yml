@@ -5,6 +5,7 @@ spring:
 management:
   endpoints:
     web:
+      base-path: /actuator
       exposure:
         include: health,metrics,prometheus,info
   endpoint:
@@ -17,10 +18,16 @@ management:
 
 springdoc:
   api-docs:
+    enabled: true
     path: /api-docs
   swagger-ui:
     path: /swagger-ui.html
     operationsSorter: method
+    urls:
+      - url: /api-docs
+        name: API Documentation
+  use-management-port: false
+  default-produces-media-type: application/json
 
 rate-limit:
   capacity: 100
