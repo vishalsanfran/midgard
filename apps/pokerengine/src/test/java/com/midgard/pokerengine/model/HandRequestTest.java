@@ -1,5 +1,7 @@
 package com.midgard.pokerengine.model;
 
+import com.midgard.pokerengine.config.PokerConfig;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -8,121 +10,94 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class HandRequestTest {
 
+
     @Test
-    void isValidHandSize_FiveCards_ReturnsTrue() {
-        HandRequest request = new HandRequest();
-        request.setCards(List.of(
-            new Card(Suit.HEARTS, 2),
-            new Card(Suit.CLUBS, 3),
-            new Card(Suit.DIAMONDS, 4),
-            new Card(Suit.SPADES, 5),
-            new Card(Suit.HEARTS, 6)
+    void constructor_FiveCards_ValidHand() {
+        HandRequest request = new HandRequest(List.of(
+            new Card(Suit.HEARTS, Rank.TWO),
+            new Card(Suit.CLUBS, Rank.THREE),
+            new Card(Suit.DIAMONDS, Rank.FOUR),
+            new Card(Suit.SPADES, Rank.FIVE),
+            new Card(Suit.HEARTS, Rank.SIX)
         ));
-        assertTrue(request.isValidHandSize());
+        assertNotNull(request);
     }
 
     @Test
-    void isValidHandSize_SevenCards_ReturnsTrue() {
-        HandRequest request = new HandRequest();
-        request.setCards(List.of(
-            new Card(Suit.HEARTS, 2),
-            new Card(Suit.CLUBS, 3),
-            new Card(Suit.DIAMONDS, 4),
-            new Card(Suit.SPADES, 5),
-            new Card(Suit.HEARTS, 6),
-            new Card(Suit.CLUBS, 7),
-            new Card(Suit.DIAMONDS, 8)
+    void constructor_SevenCards_ValidHand() {
+        HandRequest request = new HandRequest(List.of(
+            new Card(Suit.HEARTS, Rank.TWO),
+            new Card(Suit.CLUBS, Rank.THREE),
+            new Card(Suit.DIAMONDS, Rank.FOUR),
+            new Card(Suit.SPADES, Rank.FIVE),
+            new Card(Suit.HEARTS, Rank.SIX),
+            new Card(Suit.CLUBS, Rank.SEVEN),
+            new Card(Suit.DIAMONDS, Rank.EIGHT)
         ));
-        assertTrue(request.isValidHandSize());
-    }
-
-    @Test
-    void isValidHandSize_SixCards_ReturnsFalse() {
-        HandRequest request = new HandRequest();
-        request.setCards(List.of(
-            new Card(Suit.HEARTS, 2),
-            new Card(Suit.CLUBS, 3),
-            new Card(Suit.DIAMONDS, 4),
-            new Card(Suit.SPADES, 5),
-            new Card(Suit.HEARTS, 6),
-            new Card(Suit.CLUBS, 7)
-        ));
-        assertFalse(request.isValidHandSize());
-    }
-
-    @Test
-    void isValidHandSize_NullCards_ReturnsFalse() {
-        HandRequest request = new HandRequest();
-        request.setCards(null);
-        assertFalse(request.isValidHandSize());
+        assertNotNull(request);
     }
 
     @Test
     void equals_SameCards_ReturnsTrue() {
-        HandRequest request1 = new HandRequest();
-        HandRequest request2 = new HandRequest();
         List<Card> cards = List.of(
-            new Card(Suit.HEARTS, 2),
-            new Card(Suit.CLUBS, 3),
-            new Card(Suit.DIAMONDS, 4),
-            new Card(Suit.SPADES, 5),
-            new Card(Suit.HEARTS, 6)
+            new Card(Suit.HEARTS, Rank.TWO),
+            new Card(Suit.CLUBS, Rank.THREE),
+            new Card(Suit.DIAMONDS, Rank.FOUR),
+            new Card(Suit.SPADES, Rank.FIVE),
+            new Card(Suit.HEARTS, Rank.SIX)
         );
-        request1.setCards(cards);
-        request2.setCards(cards);
-        
+        HandRequest request1 = new HandRequest(cards);
+        HandRequest request2 = new HandRequest(cards);
+
         assertEquals(request1, request2);
         assertEquals(request1.hashCode(), request2.hashCode());
     }
 
     @Test
     void equals_DifferentCards_ReturnsFalse() {
-        HandRequest request1 = new HandRequest();
-        HandRequest request2 = new HandRequest();
-        request1.setCards(List.of(
-            new Card(Suit.HEARTS, 2),
-            new Card(Suit.CLUBS, 3),
-            new Card(Suit.DIAMONDS, 4),
-            new Card(Suit.SPADES, 5),
-            new Card(Suit.HEARTS, 6)
+        HandRequest request1 = new HandRequest(List.of(
+            new Card(Suit.HEARTS, Rank.TWO),
+            new Card(Suit.CLUBS, Rank.THREE),
+            new Card(Suit.DIAMONDS, Rank.FOUR),
+            new Card(Suit.SPADES, Rank.FIVE),
+            new Card(Suit.HEARTS, Rank.SIX)
         ));
-        request2.setCards(List.of(
-            new Card(Suit.HEARTS, 3),
-            new Card(Suit.CLUBS, 4),
-            new Card(Suit.DIAMONDS, 5),
-            new Card(Suit.SPADES, 6),
-            new Card(Suit.HEARTS, 7)
+
+        HandRequest request2 = new HandRequest(List.of(
+            new Card(Suit.HEARTS, Rank.THREE),
+            new Card(Suit.CLUBS, Rank.FOUR),
+            new Card(Suit.DIAMONDS, Rank.FIVE),
+            new Card(Suit.SPADES, Rank.SIX),
+            new Card(Suit.HEARTS, Rank.SEVEN)
         ));
-        
+
         assertNotEquals(request1, request2);
         assertNotEquals(request1.hashCode(), request2.hashCode());
     }
 
     @Test
     void equals_Null_ReturnsFalse() {
-        HandRequest request = new HandRequest();
-        request.setCards(List.of(
-            new Card(Suit.HEARTS, 2),
-            new Card(Suit.CLUBS, 3),
-            new Card(Suit.DIAMONDS, 4),
-            new Card(Suit.SPADES, 5),
-            new Card(Suit.HEARTS, 6)
+        HandRequest request = new HandRequest(List.of(
+            new Card(Suit.HEARTS, Rank.TWO),
+            new Card(Suit.CLUBS, Rank.THREE),
+            new Card(Suit.DIAMONDS, Rank.FOUR),
+            new Card(Suit.SPADES, Rank.FIVE),
+            new Card(Suit.HEARTS, Rank.SIX)
         ));
-        
+
         assertNotEquals(request, null);
     }
 
     @Test
     void equals_DifferentClass_ReturnsFalse() {
-        HandRequest request = new HandRequest();
-        request.setCards(List.of(
-            new Card(Suit.HEARTS, 2),
-            new Card(Suit.CLUBS, 3),
-            new Card(Suit.DIAMONDS, 4),
-            new Card(Suit.SPADES, 5),
-            new Card(Suit.HEARTS, 6)
+        HandRequest request = new HandRequest(List.of(
+            new Card(Suit.HEARTS, Rank.TWO),
+            new Card(Suit.CLUBS, Rank.THREE),
+            new Card(Suit.DIAMONDS, Rank.FOUR),
+            new Card(Suit.SPADES, Rank.FIVE),
+            new Card(Suit.HEARTS, Rank.SIX)
         ));
-        
+
         assertNotEquals(request, "not a hand request");
     }
 }

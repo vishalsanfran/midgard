@@ -2,6 +2,7 @@
 
 A Spring Boot based poker game engine service.
 
+
 ## Prerequisites
 
 - Java 21
@@ -55,11 +56,33 @@ This project uses:
 
 Once the application is running, you can access the API documentation at:
 - Swagger UI: http://localhost:8080/swagger-ui.html
-- OpenAPI Spec: http://localhost:8080/v3/api-docs
+- OpenAPI Spec: http://localhost:8080/api-docs
+
+### API Endpoints
+
+Card model: {"suit": "HEARTS", "value": 2},
+
+#### Check for Straight Hand
+Evaluates if a given set of poker cards forms a straight.
+
+- Endpoint: `POST /api/v1/hand/isstraight`
+- Content-Type: `application/json`
+- Request Body: Array of cards, each with suit and value
+- Response: Boolean indicating if the hand forms a straight
+
+Example Request:
+```json
+{
+  "cards": [
+    {"suit": "HEARTS", "value": 2},
+    {"suit": "CLUBS", "value": 3},
+    {"suit": "DIAMONDS", "value": 4},
+    {"suit": "SPADES", "value": 5},
+    {"suit": "HEARTS", "value": 6}
+  ]
+}
+```
 
 ### API Versioning
-All endpoints are versioned and accessible under `/api/v1/`
-Example endpoints:
-- Health check: http://localhost:8080/api/v1/actuator/health
-- API Documentation: http://localhost:8080/api/v1/api-docs
-- Swagger UI: http://localhost:8080/api/v1/swagger-ui.html
+All endpoints should be versioned , by default they start at v1
+- is straight API: http://localhost:8080/api/v1/hand/isstraight
