@@ -1,5 +1,5 @@
 fastapi
-uvicorn
+uvicorn[standard]
 numpy
 pandas
 scikit-learn
@@ -7,3 +7,4 @@ joblib
 python-dotenv
 pydantic-settings
 textblob
+gunicorn
